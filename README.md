@@ -55,6 +55,7 @@ python main.py
 ## Important Notes
 
 - This is a **selfbot** (runs on your user account) which **violates Discord's Terms of Service**. Use at your own risk.
+- It also violates Pradise TOS at [Here](https://github.com/Daniel-191/Paradise/blob/main/TOS.md). Use at your own risk.
 - Do **not** share your Discord token with anyone.
 - Make sure your token and channel ID are correct in the `settings.json` file.
 - Run this script responsibly and avoid spamming Discord.
