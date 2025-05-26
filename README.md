@@ -3,6 +3,11 @@
 
 A selfbot designed to automate fishing in a specific game channel for Pradise Bot : [Click me](https://top.gg/bot/1272208314163396650?__cf_chl_tk=6cdUiJZLI6vEqhIwhuwRXlys6EYs5242B86TLdD0wJY-1748265758-1.0.1.1-CT.XOrJcKiEwNtWKSmyZIbZZ5i0exsNL.JRvDS0e.XE)
 
+## Announcement
+Hi, I’m the owner (aka _xuanpac#0). This project is discontinued since I got banned from using the bot, so I can't push any more updates.
+
+If anyone wants to improve or update it, feel free! I’d really appreciate it if the project keeps going.
+
 ---
 
 ## Features
