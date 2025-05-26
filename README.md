@@ -16,7 +16,6 @@ If anyone wants to improve or update it, feel free! I’d really appreciate it i
 - **Fishing stats display:** Shows your current streak, earnings, level, and XP progress in a formatted console table with progress bars.
 - **Captcha detection & alert:** Detects captcha/security verification prompts and uses text-to-speech to notify you.
 - **Settings management:** Loads token, channel ID, and captcha alert toggle from a `settings.json` file
-- **Discord presence:** Sets a custom "Fishing 🎣" status on login
 
 ---
 
