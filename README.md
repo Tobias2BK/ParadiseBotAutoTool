@@ -1,7 +1,7 @@
 
 # Pradise bot Auto Fishing Tool
 
-A selfbot designed to automate fishing in a specific game channel for Pradise Bot : [Click me](https://top.gg/bot/1272208314163396650?__cf_chl_tk=6cdUiJZLI6vEqhIwhuwRXlys6EYs5242B86TLdD0wJY-1748265758-1.0.1.1-CT.XOrJcKiEwNtWKSmyZIbZZ5i0exsNL.JRvDS0e.XE)
+A selfbot designed to automate fishing in a specific game channel for Pradise Bot : [Click me](top.gg/bot/1272208314163396650)
 
 ---
 
@@ -55,6 +55,7 @@ python main.py
 ## Important Notes
 
 - This is a **selfbot** (runs on your user account) which **violates Discord's Terms of Service**. Use at your own risk.
+- It also violates Paradise Bot's Terms of Service at [Here](https://github.com/Daniel-191/Paradise/blob/main/TOS.md). Use at your own risk.
 - Do **not** share your Discord token with anyone.
 - Make sure your token and channel ID are correct in the `settings.json` file.
 - Run this script responsibly and avoid spamming Discord.
