@@ -48,6 +48,8 @@ Run the script:
 python main.py
 ```
 
+- Then run /fish on your discord channel
+
 ---
 
 ## Important Notes
