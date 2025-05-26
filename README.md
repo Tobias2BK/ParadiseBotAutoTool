@@ -1,8 +1,7 @@
 
 # Pradise bot Auto Fishing Tool
 
-A selfbot designed to automate fishing in a specific game channel for Pradise Bot
-Bot : [Click me](https://top.gg/bot/1272208314163396650?__cf_chl_tk=6cdUiJZLI6vEqhIwhuwRXlys6EYs5242B86TLdD0wJY-1748265758-1.0.1.1-CT.XOrJcKiEwNtWKSmyZIbZZ5i0exsNL.JRvDS0e.XE)
+A selfbot designed to automate fishing in a specific game channel for Pradise Bot : [Click me](https://top.gg/bot/1272208314163396650?__cf_chl_tk=6cdUiJZLI6vEqhIwhuwRXlys6EYs5242B86TLdD0wJY-1748265758-1.0.1.1-CT.XOrJcKiEwNtWKSmyZIbZZ5i0exsNL.JRvDS0e.XE)
 
 ---
 
