@@ -1,0 +1,5 @@
+{
+  "TOKEN": "your_discord_token_here",
+  "CHANNEL_ID": "your_target_channel_id",
+  "captcha_alerts": true
+}

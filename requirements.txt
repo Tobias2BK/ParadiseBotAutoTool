@@ -1,0 +1,4 @@
+discord.py-self
+aiohttp
+rich
+pyttsx3
