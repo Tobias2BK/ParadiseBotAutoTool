@@ -75,7 +75,6 @@ async def on_ready():
     session = aiohttp.ClientSession()  # now created inside event loop
     os.system('cls')
     log(f"✅ Logged in as {bot.user}")
-    await bot.change_presence(activity=discord.Game(name="Fishing 🎣"))
 
 @bot.event
 async def on_raw_message_edit(payload: discord.RawMessageUpdateEvent) -> None:
@@ -96,6 +95,11 @@ async def on_raw_message_edit(payload: discord.RawMessageUpdateEvent) -> None:
     if components := message.components:
         for btn in (b for row in components for b in row.children):
             if btn.label.lower() == "cast line":
+                await asyncio.sleep(random.uniform(0.3, 1.8))
+                # 🧠 Add a chance to slightly delay more (reverse thinking)
+                if random.random() < 0.3:
+                    await asyncio.sleep(random.uniform(1.5, 3.5))
+
                 await session.post(
                     "https://discord.com/api/v9/interactions",
                     json={
