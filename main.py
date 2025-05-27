@@ -71,7 +71,6 @@ def print_stats(streak: int, earnings: float, level: int, xp: Tuple[int, int]) -
 
 
 async def send_random_commands(message: discord.Message):
-    global _token
     alx = [
         ('cooldowns','1340813385515929688','1341464120498585702'), #name,id,version
         ('beg','1340813385515929687','1340813386581020796'),
