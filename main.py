@@ -11,6 +11,8 @@ from rich.console import Console
 from rich.table import Table
 from rich.box import ROUNDED
 import pyttsx3
+import requests
+from typing import Tuple
 
 # ===================== GLOBAL INIT =====================
 engine = pyttsx3.init()
@@ -18,6 +20,7 @@ bot = commands.Bot(command_prefix="!", self_bot=True)
 console = Console()
 session = None
 settings_file = "settings.json"
+last_afk = datetime.now()
 
 # ===================== SETTINGS =====================
 def load_settings():
@@ -28,17 +31,16 @@ def load_settings():
         return json.load(f)
     
 settings = load_settings()
-_token = settings.get("TOKEN")
-_channel_id = int(settings.get("CHANNEL_ID"))
 _captcha = settings.get("captcha_alerts",True)
-if _token == "your_discord_token_here":
-    print("Please put your token in .json file")
+
+try:
+    _token = settings.get("TOKEN")
+    _channel_id = int(settings.get("CHANNEL_ID"))
+except (TypeError, ValueError):
+    print("Invalid channel ID or Token in settings.json")
     input()
     os._exit()
-if _channel_id == 'your_target_channel_id':
-    print("Please put your channel id in .json file")
-    input()
-    os._exit()
+
 
 # ===================== UTILITY FUNCS =====================
 def log(msg: str) -> None:
@@ -53,7 +55,7 @@ def human_format(num: float) -> str:
         num /= 1000
     return f"{num:.1f}P"
 
-def print_stats(streak: int, earnings: float, level: int, xp: tuple[int, int]) -> None:
+def print_stats(streak: int, earnings: float, level: int, xp: Tuple[int, int]) -> None:
     os.system('cls')
     console.rule("[bold blue]> Fishing Stats [/bold blue]", style="grey37")
     progress_ratio = min(xp[0]/xp[1], 1.0)
@@ -67,6 +69,71 @@ def print_stats(streak: int, earnings: float, level: int, xp: tuple[int, int]) -
     console.print(table)
     console.rule("", style="grey23")
 
+
+async def send_random_commands(message: discord.Message):
+    global _token
+    alx = [
+        ('cooldowns','1340813385515929688','1341464120498585702'), #name,id,version
+        ('beg','1340813385515929687','1340813386581020796'),
+        ('leaderboard',"1340813385515929684","1352686110169370656"),
+        ("fish_leaderboard","1343195779094806591","1343195779522760774"),
+        ("help","1340813385515929689","1342480775408259094"),
+        ("freemoney","1340813385515929690","1340813386581020799"),
+        ("properties","1357996357910270033","1357996357910270035"),
+        ("crime","1340813384320290891","1340813386421764205"),
+        ("fries-in-bag","1355209313907380297","1355209313907380298"),
+        ("balance","1340813385180119058","1340813386526756931"),
+    ]
+    chosen = random.choice(alx)
+    async with session.post(
+        "https://discord.com/api/v9/interactions",
+        json={
+            "type": 2,
+            "nonce": str(random.randint(10**18, 10**19)),
+            "guild_id": str(message.guild.id),
+            "channel_id": str(message.channel.id),
+            "message_id": str(message.id),
+            "application_id": "1272208314163396650",
+            "session_id": bot._connection.session_id,
+            "data": {
+                "version":  chosen[2],
+                "id": chosen[1],
+                "name": chosen[0],
+                "type": 1,
+            }
+        },
+        headers={"Authorization": _token}
+    ) as r: log(f"Command {chosen[0]} sent, status: {r.status}")
+
+async def human_delay():
+    # Im human moments
+    min_delay,max_delay = random.uniform(0.6, 1.4),random.uniform(1.4, 3.6)
+    delay = random.gauss((min_delay + max_delay) / 2, 0.3)  
+    delay = max(min_delay, min(delay, max_delay))  
+    await asyncio.sleep(delay)
+
+    roll = random.random()
+    if roll < 0.008:
+        deep = random.uniform(60, 90)
+        log(f"🧠 Zoning out... Deep human thinking... [{deep:.1f}s]")
+        await asyncio.sleep(deep)
+    elif roll < 0.15:
+        micro = random.uniform(2.5, 5.5)
+        log(f"🤔 Hmm... hesitating like a real person [{micro:.2f}s]")
+        await asyncio.sleep(micro)
+    elif roll < 0.35:
+        pause = random.uniform(0.8, 2.2)
+        await asyncio.sleep(pause)
+
+async def maybe_afk():
+    global last_afk
+    now = datetime.now()
+    if (now - last_afk).seconds > random.randint(1800, 3600):  # 30–60 mins
+        duration = random.randint(180, 600)  # 3–10 mins
+        log(f"😪 AFK time... {duration} seconds")
+        await asyncio.sleep(duration)
+        last_afk = now
+
 # ===================== EVENTS =====================
 @bot.event
 async def on_ready():
@@ -75,6 +142,7 @@ async def on_ready():
     session = aiohttp.ClientSession()  # now created inside event loop
     os.system('cls')
     log(f"✅ Logged in as {bot.user}")
+    
 
 @bot.event
 async def on_raw_message_edit(payload: discord.RawMessageUpdateEvent) -> None:
@@ -95,11 +163,7 @@ async def on_raw_message_edit(payload: discord.RawMessageUpdateEvent) -> None:
     if components := message.components:
         for btn in (b for row in components for b in row.children):
             if btn.label.lower() == "cast line":
-                await asyncio.sleep(random.uniform(0.3, 1.8))
-                # 🧠 Add a chance to slightly delay more (reverse thinking)
-                if random.random() < 0.3:
-                    await asyncio.sleep(random.uniform(1.5, 3.5))
-
+                await human_delay()
                 await session.post(
                     "https://discord.com/api/v9/interactions",
                     json={
@@ -135,7 +199,10 @@ async def on_raw_message_edit(payload: discord.RawMessageUpdateEvent) -> None:
             xp = (int(xp_match.group(1)), int(xp_match.group(2)))
 
             print_stats(streak, earnings, level, xp)
-    await asyncio.sleep(random.uniform(2.5, 4.5))  
+
+    await maybe_afk()
+    if random.random() <= random.uniform(0.2,0.5):
+        await send_random_commands(message)
 
 @bot.event
 async def on_message(message: discord.Message):
