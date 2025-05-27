@@ -1,28 +1,30 @@
+# 🎣 Paradise Bot Auto Fishing Tool (Selfbot Edition)
 
-# Pradise bot Auto Fishing Tool
-
-A selfbot designed to automate fishing in a specific game channel for Pradise Bot : [Click me](https://top.gg/bot/1272208314163396650?__cf_chl_tk=6cdUiJZLI6vEqhIwhuwRXlys6EYs5242B86TLdD0wJY-1748265758-1.0.1.1-CT.XOrJcKiEwNtWKSmyZIbZZ5i0exsNL.JRvDS0e.XE)
-
-## Announcement
-Hi, I’m the owner (aka _xuanpac#0). This project is discontinued since I got banned from using the bot, so I can't push any more updates.
-
-If anyone wants to improve or update it, feel free! I’d really appreciate it if the project keeps going.
+A Discord selfbot script that automatically plays the fishing minigame for [Paradise Bot](https://top.gg/bot/1272208314163396650) with human-like interaction. It includes fishing automation, stat tracking, anti-captcha voice alerts, and intelligent random behavior to avoid detection.
 
 ---
 
-## Features
+## 📢 Announcement
 
-- **Automatic fishing:** Automatically clicks the "Cast line" button on fishing message
-- **Fishing stats display:** Shows your current streak, earnings, level, and XP progress in a formatted console table with progress bars.
-- **Captcha detection & alert:** Detects captcha/security verification prompts and uses text-to-speech to notify you.
-- **Settings management:** Loads token, channel ID, and captcha alert toggle from a `settings.json` file
+- **5/26/2025** – This project was discontinued after I got banned from the bot... 💀
+- **5/27/2025** – SIKE! I’m back with a full update featuring “**Absolute Human Mimic**” mode for ultra-stealth fishing. See features below!
 
 ---
 
-## Setup
+## ⚙️ Features
 
-1. Clone/download this repo.
-2. Edit a `settings.json` file in the same directory with the following structure:
+- 🎣 **Auto Fishing:** Instantly clicks the “Cast Line” button when a fishing embed appears.
+- 📊 **Fishing Stats:** Displays streak, earnings, level, and XP with fancy progress bars in the terminal.
+- 🧠 **Human Simulation:** Delays, hesitations, random commands, and AFK behavior to mimic real users.
+- 🔐 **Captcha Detection:** Alerts you with TTS when a captcha/security check appears.
+- 🔧 **Customizable Settings:** All your info (token, channel ID, alert toggle) in a simple `settings.json`.
+
+---
+
+## 🚀 Setup
+
+1. **Clone or download this repo.**
+2. **Create a `settings.json` file** in the root directory with this format:
 
 ```json
 {
@@ -32,11 +34,7 @@ If anyone wants to improve or update it, feel free! I’d really appreciate it i
 }
 ```
 
-- Replace `"your_discord_token_here"` with your Discord user token.
-- Replace `"your_target_channel_id"` with the ID of the Discord channel where fishing messages appear.
-- Set `"captcha_alerts"` to `true` or `false` to enable or disable captcha voice alerts.
-
-3. Install required packages:
+3. **Install dependencies:**
 
 ```bash
 pip install -r requirements.txt
@@ -44,37 +42,34 @@ pip install -r requirements.txt
 
 ---
 
-## Usage
-
-Run the script:
+## 🕹️ Usage
 
 ```bash
 python main.py
 ```
 
-- Then run `/fish` command in your Discord channel
+Once started, run `/fish` in your target Discord channel.
 
 ---
 
-## Important Notes
+## ⚠️ Warnings
 
-- This is a **selfbot** (runs on your user account) which **violates Discord's Terms of Service**. Use at your own risk.
-- It also violates Pradise TOS at [Here](https://github.com/Daniel-191/Paradise/blob/main/TOS.md). Use at your own risk.
-- Do **not** share your Discord token with anyone.
-- Make sure your token and channel ID are correct in the `settings.json` file.
-- Run this script responsibly and avoid spamming Discord.
+> ❗ This is a **selfbot** and violates Discord's [Terms of Service](https://discord.com/terms).  
+> ❗ It also violates Paradise Bot’s [TOS](https://github.com/Daniel-191/Paradise/blob/main/TOS.md).  
+> ❗ Use responsibly, and at your own risk!
 
 ---
 
-## Dependencies
+## 📦 Dependencies
 
-- `discord.py`
+- `discord.py-self`
 - `aiohttp`
 - `rich`
 - `pyttsx3`
+- `requests`
 
 ---
 
-## License
+## 📝 License
 
-Feel free to edit, improve, or expand upon this code to fit your specific needs. Contributions and feedback are welcome—help make this project even better!
+Go wild — edit, fork, remix, or contribute! Just don’t sell it or get anyone banned (including yourself 😉).
