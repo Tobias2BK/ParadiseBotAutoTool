@@ -1,6 +1,6 @@
 # 🎣 Paradise Bot Auto Fishing Tool (Selfbot Edition)
 
-A Discord selfbot script that automatically plays the fishing minigame for [Paradise Bot](https://top.gg/bot/1272208314163396650) with human-like interaction. It includes fishing automation, stat tracking, anti-captcha voice alerts, and intelligent random behavior to avoid detection.
+A Discord selfbot script that automatically plays the fishing minigame for [Paradise Bot](https://top.gg/bot/1272208314163396650) with human-like interaction. It includes fishing automation, stat tracking, anti-captcha voice alerts, and AI Thread to avoid detection.
 
 ---
 
