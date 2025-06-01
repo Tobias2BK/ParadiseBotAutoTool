@@ -21,6 +21,7 @@ console = Console()
 session = None
 settings_file = "settings.json"
 last_afk = datetime.now()
+last_send = datetime.min
 
 # ===================== SETTINGS =====================
 def load_settings():
@@ -70,7 +71,16 @@ def print_stats(streak: int, earnings: float, level: int, xp: Tuple[int, int]) -
     console.rule("", style="grey23")
 
 
-async def send_random_commands(message: discord.Message):
+async def send_random_things(message: discord.Message):
+    global _token
+    global last_send
+
+    now = datetime.now()
+    time_diff = (now-last_send).total_seconds() / 60
+    chance = 0.4 + min(time_diff / 60, 0.5)
+
+    if random.random() > chance: return
+
     alx = [
         ('cooldowns','1340813385515929688','1341464120498585702'), #name,id,version
         ('beg','1340813385515929687','1340813386581020796'),
@@ -80,29 +90,37 @@ async def send_random_commands(message: discord.Message):
         ("freemoney","1340813385515929690","1340813386581020799"),
         ("properties","1357996357910270033","1357996357910270035"),
         ("crime","1340813384320290891","1340813386421764205"),
-        ("fries-in-bag","1355209313907380297","1355209313907380298"),
+        ("guide","1340813385750675553","1376260676162687018"),
         ("balance","1340813385180119058","1340813386526756931"),
     ]
-    chosen = random.choice(alx)
-    async with session.post(
-        "https://discord.com/api/v9/interactions",
-        json={
-            "type": 2,
-            "nonce": str(random.randint(10**18, 10**19)),
-            "guild_id": str(message.guild.id),
-            "channel_id": str(message.channel.id),
-            "message_id": str(message.id),
-            "application_id": "1272208314163396650",
-            "session_id": bot._connection.session_id,
-            "data": {
-                "version":  chosen[2],
-                "id": chosen[1],
-                "name": chosen[0],
-                "type": 1,
-            }
-        },
-        headers={"Authorization": _token}
-    ) as r: log(f"Command {chosen[0]} sent, status: {r.status}")
+    if random.random() <= 0.5:
+        chosen = random.choice(alx)
+        async with session.post(
+            "https://discord.com/api/v9/interactions",
+            json={
+                "type": 2,
+                "nonce": str(random.randint(10**18, 10**19)),
+                "guild_id": str(message.guild.id),
+                "channel_id": str(message.channel.id),
+                "message_id": str(message.id),
+                "application_id": "1272208314163396650",
+                "session_id": bot._connection.session_id,
+                "data": {
+                    "version":  chosen[2],
+                    "id": chosen[1],
+                    "name": chosen[0],
+                    "type": 1,
+                }
+            },
+            headers={"Authorization": _token}
+        ) as r: log(f"Command {chosen[0]} sent, status: {r.status}")
+        last_send = now
+        return
+    try:
+        bqq = requests.get("https://zenquotes.io/api/random").json()[0]['q']
+    except Exception: bqq = "dawg :broken_heart:"; pass
+    await message.channel.send(bqq); log(f"Message {bqq} sent, status: 204")
+    last_send = now
 
 async def human_delay():
     # Im human moments
@@ -156,28 +174,8 @@ async def on_raw_message_edit(payload: discord.RawMessageUpdateEvent) -> None:
     embed = message.embeds[0]
     title = embed.title or ""
 
-    if not re.match(r'^.+\*\*Fishing at ', title):
-        return
+    if "Fishing at" not in title: return
 
-    if components := message.components:
-        for btn in (b for row in components for b in row.children):
-            if btn.label.lower() == "cast line":
-                await human_delay()
-                await session.post(
-                    "https://discord.com/api/v9/interactions",
-                    json={
-                        "type": 3,
-                        "nonce": str(random.randint(10**18, 10**19)),
-                        "guild_id": str(message.guild.id),
-                        "channel_id": str(channel.id),
-                        "message_id": str(message.id),
-                        "application_id": "1272208314163396650",
-                        "session_id": bot._connection.session_id,
-                        "data": {"component_type": 2, "custom_id": btn.custom_id}
-                    },
-                    headers={"Authorization": _token}
-                )
-                break
     # parse stats
     if text := "\n".join(f.value for f in embed.fields if f.value):
         streak_match = re.search(r"Streak:\s*\*\*(\d+)", text)
@@ -199,9 +197,28 @@ async def on_raw_message_edit(payload: discord.RawMessageUpdateEvent) -> None:
 
             print_stats(streak, earnings, level, xp)
 
+    if components := message.components:
+        for btn in (b for row in components for b in row.children):
+            if btn.label.lower() == "cast line":
+                await human_delay()
+                await session.post(
+                    "https://discord.com/api/v9/interactions",
+                    json={
+                        "type": 3,
+                        "nonce": str(random.randint(10**18, 10**19)),
+                        "guild_id": str(message.guild.id),
+                        "channel_id": str(channel.id),
+                        "message_id": str(message.id),
+                        "application_id": "1272208314163396650",
+                        "session_id": bot._connection.session_id,
+                        "data": {"component_type": 2, "custom_id": btn.custom_id}
+                    },
+                    headers={"Authorization": _token}
+                )
+                break
+
     await maybe_afk()
-    if random.random() <= random.uniform(0.2,0.5):
-        await send_random_commands(message)
+    await send_random_things(message)
 
 @bot.event
 async def on_message(message: discord.Message):
