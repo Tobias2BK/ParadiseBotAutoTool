@@ -8,6 +8,7 @@ A Discord selfbot script that automatically plays the fishing minigame for [Para
 
 - **5/26/2025** – This project was discontinued after I got banned from the bot... 💀
 - **5/27/2025** – SIKE! I’m back with a full update featuring “**Absolute Human Mimic**” mode for ultra-stealth fishing. See features below!
+- **6/3/2025** – Updated `main.py` to align with the new update, including a revamped stats display and a new fishing system.
 
 ---
 
