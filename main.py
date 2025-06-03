@@ -73,7 +73,7 @@ def printr(level: str, xp_str: str) -> None:
     )
 
     title = Text(f"\n🐟 {bot.user.name} Quick Stats 🐟", style="bold underline green")
-    credit = Text("github.com/Tobias2BK/ParadiseBotAutoTool", style="dim italic", justify="center")
+    credit = Text("Credit: Toby Mitchell (github.com/Tobias2BK)", style="dim italic", justify="center")
 
     console.print(Align.center(title))
     console.print(Align.center(table))
@@ -81,7 +81,6 @@ def printr(level: str, xp_str: str) -> None:
     console.print()
 
 async def send_random_things(message: discord.Message):
-    global _token
     global last_send
 
     now = datetime.now()
