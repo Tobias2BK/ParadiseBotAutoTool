@@ -8,7 +8,9 @@ import asyncio
 import random
 from datetime import datetime
 from rich.console import Console
+from rich.text import Text
 from rich.table import Table
+from rich.align import Align
 from rich.box import ROUNDED
 import pyttsx3
 import requests
@@ -44,32 +46,39 @@ except (TypeError, ValueError):
 
 
 # ===================== UTILITY FUNCS =====================
-def log(msg: str) -> None:
-    console.print(f"[bold green][{datetime.now().strftime('%H:%M:%S')}][/bold green] {msg}")
+def log(msg: str, style: str = "green") -> None:
+    timestamp = f"[{datetime.now().strftime('%H:%M:%S')}]"
+    console.print(f"[bold {style}]{timestamp}[/bold {style}] {msg}")
 
-def human_format(num: float) -> str:
-    units = ['', 'K', 'M', 'B', 'T']
-    for unit in units:
-        if abs(num) < 1000:
-            formatted = f"{num:.1f}"
-            return f"{formatted.rstrip('.0')}{unit}"
-        num /= 1000
-    return f"{num:.1f}P"
+def printr(level: str, xp_str: str) -> None:
+    os.system('cls' if os.name == 'nt' else 'clear')
+    
+    try:
+        bar_part, xp_part = xp_str.split(' ', 1)
+    except ValueError:
+        bar_part = xp_str
+        xp_part = ""
 
-def print_stats(streak: int, earnings: float, level: int, xp: Tuple[int, int]) -> None:
-    os.system('cls')
-    console.rule("[bold blue]> Fishing Stats [/bold blue]", style="grey37")
-    progress_ratio = min(xp[0]/xp[1], 1.0)
-    filled = round(20 * progress_ratio)
-    bar = "█" * filled + "░" * (20 - filled)
-    table = Table(box=ROUNDED, show_header=False, padding=(0, 2))
-    table.add_row("🔥 Streak", f"{streak}")
-    table.add_row("💰 Earnings", f"${human_format(earnings)}")
-    table.add_row("⭐ Level", f"{level}")
-    table.add_row("✨ XP", f"[{bar}] {xp[0]}/{xp[1]}")
-    console.print(table)
-    console.rule("", style="grey23")
+    bar_text = Text()
+    for char in bar_part:
+        bar_text.append(char, style="bold green" if char == '█' else "grey50")
 
+    table = Table(show_header=False, box=ROUNDED, border_style="bright_blue", padding=(0, 1))
+    table.add_column(justify="right")
+    table.add_column(justify="left")
+    
+    table.add_row(
+        Text(level, style="bold magenta"), 
+        bar_text + Text(" " + xp_part, style="bold yellow")
+    )
+
+    title = Text(f"\n🐟 {bot.user.name} Quick Stats 🐟", style="bold underline green")
+    credit = Text("github.com/Tobias2BK/ParadiseBotAutoTool", style="dim italic", justify="center")
+
+    console.print(Align.center(title))
+    console.print(Align.center(table))
+    console.print(Align.center(credit))
+    console.print()
 
 async def send_random_things(message: discord.Message):
     global _token
@@ -93,8 +102,9 @@ async def send_random_things(message: discord.Message):
         ("guide","1340813385750675553","1376260676162687018"),
         ("balance","1340813385180119058","1340813386526756931"),
     ]
-    if random.random() <= 0.5:
+    if random.random() <= 0.4:
         chosen = random.choice(alx)
+        await human_delay()
         async with session.post(
             "https://discord.com/api/v9/interactions",
             json={
@@ -119,6 +129,7 @@ async def send_random_things(message: discord.Message):
     try:
         bqq = requests.get("https://zenquotes.io/api/random").json()[0]['q']
     except Exception: bqq = "dawg :broken_heart:"; pass
+    await human_delay()
     await message.channel.send(bqq); log(f"Message {bqq} sent, status: 204")
     last_send = now
 
@@ -158,9 +169,8 @@ async def on_ready():
     await bot.wait_until_ready()
     session = aiohttp.ClientSession()  # now created inside event loop
     os.system('cls')
-    log(f"✅ Logged in as {bot.user}")
+    log(f"✅ Logged in as {bot.user} - {bot._connection.session_id}",'green')
     
-
 @bot.event
 async def on_raw_message_edit(payload: discord.RawMessageUpdateEvent) -> None:
     if payload.channel_id != _channel_id:
@@ -172,30 +182,10 @@ async def on_raw_message_edit(payload: discord.RawMessageUpdateEvent) -> None:
         return
 
     embed = message.embeds[0]
-    title = embed.title or ""
+    if "'s Session" not in embed.title or len(embed.fields) == 3: return
+    #parse stats
+    printr(embed.fields[1].name, embed.fields[1].value)
 
-    if "Fishing at" not in title: return
-
-    # parse stats
-    if text := "\n".join(f.value for f in embed.fields if f.value):
-        streak_match = re.search(r"Streak:\s*\*\*(\d+)", text)
-        earnings_match = re.search(r"Earnings:\s*\*\*\$([\d,.]+(?:\.\d+)?)([KMBT]?)", text)
-        level_match = re.search(r"Level:\s*\*\*(\d+)", text)
-        xp_match = re.search(r"XP:.*\*\*(\d+)/(\d+)", text)
-
-        if streak_match and earnings_match and level_match and xp_match:
-            streak = int(streak_match.group(1))
-
-            earnings_str = earnings_match.group(1).replace(",", "")
-            unit = earnings_match.group(2).upper()
-            earnings = float(earnings_str)
-            multiplier = {"":1, "K":1_000, "M":1_000_000, "B":1_000_000_000, "T":1_000_000_000_000}
-            earnings *= multiplier.get(unit, 1)
-
-            level = int(level_match.group(1))
-            xp = (int(xp_match.group(1)), int(xp_match.group(2)))
-
-            print_stats(streak, earnings, level, xp)
 
     if components := message.components:
         for btn in (b for row in components for b in row.children):
@@ -231,15 +221,15 @@ async def on_message(message: discord.Message):
 
     embed = message.embeds[0]
 
-    if embed.title == "🔒 Security Verification Required":
-        log("[bold red][CAPTCHA DETECTED][/bold red]")
+    if embed.title and "🔒 Security Verification Required" in embed.title:
+        log("[CAPTCHA DETECTED]")
         if _captcha:
-            engine.say("Captcha detected. Attention required.")
+            engine.say("Captcha detected. Attention required.",'red')
             engine.runAndWait()
 
-    elif "Verification successful! Continue fishing!" in embed.description:
+    if embed.description and "Verification successful!" in embed.description:
         if _captcha:
-            log("[bold yellow][CAPTCHA SOLVED] Press 'Cast line' again to start[/bold yellow]")
+            log("[CAPTCHA SOLVED] Press 'Cast line' again to start",'yellow')
             engine.say("Captcha solved. Press 'Cast line' again to start.")
             engine.runAndWait()
 
