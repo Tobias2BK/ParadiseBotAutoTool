@@ -226,11 +226,17 @@ async def on_message(message: discord.Message):
             engine.say("Captcha detected. Attention required.",'red')
             engine.runAndWait()
 
-    if embed.description and "Verification successful!" in embed.description:
-        if _captcha:
-            log("[CAPTCHA SOLVED] Press 'Cast line' again to start",'yellow')
-            engine.say("Captcha solved. Press 'Cast line' again to start.")
+    if embed.description:
+        if "Verification successful!" in embed.description:
+            if _captcha:
+                log("[CAPTCHA SOLVED] Press 'Cast line' again to start",'yellow')
+                engine.say("Captcha solved. Press 'Cast line' again to start.")
+                engine.runAndWait()
+        elif "This fishing session is no longer active!" in embed.description:
+            log("[SESSION] The current fishing session is no longer active!",'red')
+            engine.say("The current session has ended, please use /fish to start a new session.")
             engine.runAndWait()
+    
 
 # ===================== RUN BOT =====================
 try:
