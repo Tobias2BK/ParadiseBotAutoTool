@@ -47,8 +47,7 @@ except (TypeError, ValueError):
 
 # ===================== UTILITY FUNCS =====================
 def log(msg: str, style: str = "green") -> None:
-    timestamp = f"[{datetime.now().strftime('%H:%M:%S')}]"
-    console.print(f"[bold {style}]{timestamp}[/bold {style}] {msg}")
+    console.print(f"[bold {style}] {msg}[/bold {style}]")
 
 def printr(level: str, xp_str: str) -> None:
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -232,9 +231,9 @@ async def on_message(message: discord.Message):
                 log("[CAPTCHA SOLVED] Press 'Cast line' again to start",'yellow')
                 engine.say("Captcha solved. Press 'Cast line' again to start.")
                 engine.runAndWait()
-        elif "This fishing session is no longer active!" in embed.description:
+        elif "fishing session is no longer active" in embed.description:
             log("[SESSION] The current fishing session is no longer active!",'red')
-            engine.say("The current session has ended, please use /fish to start a new session.")
+            engine.say("The current session has ended. Please start a new one to continue.")
             engine.runAndWait()
     
 
